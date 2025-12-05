@@ -10,13 +10,19 @@ const Statistics = ({good, neutral, bad, total, averageScore, positivePercentage
   return (
     <>
     <h2>statistics</h2>
-    <p>good {good}</p>
-    <p>neutral {neutral}</p>
-    <p>bad {bad}</p>
-    <p>all {total}</p>
-    <p>average {averageScore}</p>
-    <p>positive {positivePercentage || 0} %</p>
+    <StatisticLine text="good" value={good} />
+    <StatisticLine text="neutral" value={neutral} />
+    <StatisticLine text="bad" value={bad} />
+    <StatisticLine text="all" value={total} />
+    <StatisticLine text="average" value={averageScore} />
+    <StatisticLine text="positive" value={positivePercentage + ' %'} />
     </>
+  )
+}
+
+const StatisticLine = ({text, value}) => {
+  return (
+    <p>{text} {value}</p>
   )
 }
 
