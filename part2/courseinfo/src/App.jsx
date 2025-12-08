@@ -1,8 +1,9 @@
-const Course = ({course}) => {
+const Course = ({course, total}) => {
   return (
     <>
     <Header course={course.name} />
     <Content parts={course.parts} />
+    <Total total={total} />
     </>
   )
 }
@@ -21,7 +22,7 @@ const Part = (props) => (
   </p>
 )
 
-const Total = (props) => <p>Number of exercises {props.total}</p>
+const Total = (props) => <strong>total of {props.total} exercises</strong>
 
 const App = () => {
   const course = {
@@ -46,7 +47,9 @@ const App = () => {
     ]
   }
 
-  return <Course course={course} />
+  const total = course.parts.reduce((sum, part) => sum + part.exercises, 0);
+
+  return <Course course={course} total={total}/>
 }
 
 export default App
