@@ -14,6 +14,12 @@ const create = (newPhone) => {
         .then(response => response.data);
 };
 
+const update = (id, data) => {
+    return axios
+        .put(`${URL}/${id}`, data)
+        .then(response => response.data);
+};
+
 const deletePhone = (id) => {
     return axios
     .delete(`${URL}/${id}`);
@@ -22,5 +28,6 @@ const deletePhone = (id) => {
 export {
     getAll,
     create,
-    deletePhone
+    deletePhone,
+    update
 }
