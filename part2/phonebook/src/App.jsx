@@ -3,7 +3,7 @@ import axios from 'axios';
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
-import { create, getAll } from './services/phonebook';
+import { create, deletePhone, getAll } from './services/phonebook';
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
@@ -45,6 +45,14 @@ const App = () => {
     }
   }
 
+  const deletePerson = (id, name) => {
+    const shouldDelete = confirm(`Delete ${name}?`);
+    if (shouldDelete) {
+      deletePhone(id)
+      .then(() => setPersons(persons.filter(person => person.id !== id)));
+    }
+  }
+
   const filteredPersons = persons.filter(person => person.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()));
 
   return (
@@ -60,7 +68,7 @@ const App = () => {
         addPerson={addPerson}
       />
       <h2>Numbers</h2>
-      <Persons persons={filteredPersons} />
+      <Persons persons={filteredPersons} onDelete={deletePerson} />
     </div>
   )
 }
