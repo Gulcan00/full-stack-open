@@ -14,7 +14,13 @@ const create = (newPhone) => {
         .then(response => response.data);
 };
 
+const deletePhone = (id) => {
+    return axios
+    .delete(`${URL}/${id}`);
+}
+
 export {
     getAll,
-    create
+    create,
+    deletePhone
 }
