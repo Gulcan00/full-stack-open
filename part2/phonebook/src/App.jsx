@@ -46,6 +46,9 @@ const App = () => {
         .then(updatedData => {
           setPersons(persons.map(person => person.id === existingPerson.id ? updatedData : person));
           setNotification({message: 'Number updated successfully', type: 'success'});
+        })
+        .catch(() => {
+          setNotification({message: `Information of ${existingPerson.name} has already been removed from the server`, type: 'error'});
         });
       }
     } else {
