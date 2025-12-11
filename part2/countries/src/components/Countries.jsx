@@ -43,7 +43,7 @@ const Countries = ({search}) => {
                         })
                     }
                 </ul> :
-                <Country country={filteredCountries[0]} />
+                <Country country={filteredCountries[0]} showWeather={true}/>
                 )
             }
         </div>
