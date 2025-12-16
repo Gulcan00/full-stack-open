@@ -24,6 +24,8 @@ let phonebook = [
     }
 ];
 
+app.use(express.json());
+
 app.get('/api/persons', (req, res) => {
     return res.json(phonebook);
 });
@@ -44,6 +46,23 @@ app.delete('/api/persons/:id', (req, res) => {
   phonebook = phonebook.filter(p => p.id !== id);
 
   return res.status(204).end();
+});
+
+const generateId = () => {
+  return Math.floor(Math.random() * 100000);
+}
+
+app.post('/api/persons', (req, res) => {
+  const body = req.body;
+
+  const person = {
+    id: String(generateId()),
+    name: body.name,
+    number: body.number
+  }
+
+  phonebook = phonebook.concat(person);
+  return res.json(person);
 })
 
 app.get('/info', (req, res) => {
