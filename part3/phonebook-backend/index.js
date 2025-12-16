@@ -55,6 +55,21 @@ const generateId = () => {
 app.post('/api/persons', (req, res) => {
   const body = req.body;
 
+  if (!body.name || !body.number) {
+    let msg = '';
+    if (!body.name) msg += 'name is missing; ';
+    if (!body.number) msg += 'number is missing; ';
+    return res.status(400).json({
+      error: msg
+    });
+  }
+
+  if (phonebook.some(p => p.name.toLocaleLowerCase() === body.name.toLocaleLowerCase())) {
+    return res.status(400).json({
+      error: 'name must be unique'
+    });
+  }
+
   const person = {
     id: String(generateId()),
     name: body.name,
