@@ -28,12 +28,23 @@ app.get('/api/persons', (req, res) => {
     return res.json(phonebook);
 });
 
+app.get('/api/persons/:id', (req, res) => {
+  const id = req.params.id;
+  const person = phonebook.find(p => p.id === id);
+
+  if (person) {
+    return res.json(person);
+  } else {
+    return res.status(404).end();
+  }
+});
+
 app.get('/info', (req, res) => {
   return res.send(`
     <p>Phonebook has info for ${phonebook.length} people</p>
     <p>${new Date()}</p>
     `);
-})
+});
 
 const PORT = 3001;
 app.listen(PORT, () => {
