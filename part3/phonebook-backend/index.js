@@ -63,6 +63,36 @@ app.post('/api/persons', (req, res) => {
   }) 
 })
 
+app.put('/api/persons/:id', (req, res, next) => {
+  const id = req.params.id;
+  const {name, number } = req.body;
+
+  if (!name || !number) {
+    let msg = '';
+    if (!name) msg += 'name is missing; ';
+    if (!number) msg += 'number is missing; ';
+    return res.status(400).json({
+      error: msg
+    });
+  }
+
+  Person.findById(id)
+    .then(person => {
+      if (!person) {
+        return res.status(404).end();
+      } else {
+        person.name = name;
+        person.number = number;
+
+        person.save().then(updatedPerson => {
+          return res.json(updatedPerson);
+        })
+      }
+    })
+    .catch(err => next(err))
+
+})
+
 app.get('/info', (req, res) => {
   Person.find({}).then(people => {
     return res.send(`
