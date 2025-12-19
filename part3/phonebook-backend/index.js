@@ -35,14 +35,10 @@ app.get('/api/persons/:id', (req, res) => {
 
 app.delete('/api/persons/:id', (req, res) => {
   const id = req.params.id;
-  phonebook = phonebook.filter(p => p.id !== id);
-
-  return res.status(204).end();
+  Person.findByIdAndDelete(id).then(() => {
+    return res.status(204).end();
+  })
 });
-
-const generateId = () => {
-  return Math.floor(Math.random() * 100000);
-}
 
 app.post('/api/persons', (req, res) => {
   const body = req.body;
@@ -56,27 +52,23 @@ app.post('/api/persons', (req, res) => {
     });
   }
 
-  if (phonebook.some(p => p.name.toLocaleLowerCase() === body.name.toLocaleLowerCase())) {
-    return res.status(400).json({
-      error: 'name must be unique'
-    });
-  }
-
-  const person = {
-    id: String(generateId()),
+  const person = new Person({
     name: body.name,
     number: body.number
-  }
+  });
 
-  phonebook = phonebook.concat(person);
-  return res.json(person);
+  person.save().then(newPerson => {
+    return res.json(newPerson);
+  }) 
 })
 
 app.get('/info', (req, res) => {
-  return res.send(`
-    <p>Phonebook has info for ${phonebook.length} people</p>
+  Person.find({}).then(people => {
+    return res.send(`
+    <p>Phonebook has info for ${people.length} people</p>
     <p>${new Date()}</p>
     `);
+  })
 });
 
 const PORT = process.env.PORT;
