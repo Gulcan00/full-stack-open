@@ -56,6 +56,9 @@ const App = () => {
         setPersons(persons.concat(newPerson));
         setNotification({message: 'Number added successfully', type: 'success'});
       })
+      .catch(err => {
+        setNotification({message: err.message, type: 'error'});
+      })
     }
     setNewName('');
     setNewNumber('');

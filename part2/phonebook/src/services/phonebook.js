@@ -11,7 +11,12 @@ const getAll = () => {
 const create = (newPhone) => {
     return axios
         .post(URL, newPhone)
-        .then(response => response.data);
+        .then(response => response.data)
+        .catch(err => {
+            const msg = err.response.data.error;
+            console.log(msg);
+            throw new Error(msg);
+        });
 };
 
 const update = (id, data) => {
