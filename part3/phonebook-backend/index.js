@@ -33,11 +33,12 @@ app.get('/api/persons/:id', (req, res) => {
   })
 });
 
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res, next) => {
   const id = req.params.id;
   Person.findByIdAndDelete(id).then(() => {
     return res.status(204).end();
   })
+  .catch(err => next(err))
 });
 
 app.post('/api/persons', (req, res) => {
@@ -70,6 +71,18 @@ app.get('/info', (req, res) => {
     `);
   })
 });
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+  
+  if (error.name === 'CastError') {
+    return response.status(400).send({error: 'malformatted id'})
+  }
+
+  next(error)
+}
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
