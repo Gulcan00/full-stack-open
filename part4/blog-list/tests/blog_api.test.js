@@ -72,6 +72,36 @@ test('likes defaults to 0 if missing', async () => {
         assert.strictEqual(createdBlog.likes, 0)
 })
 
+test('blog with missing title is not added', async () => {
+        const blog = {
+            author: "Robert C. Martin",
+            url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html"
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(blog)
+            .expect(400)
+
+        const blogs = await testHelper.blogsInDB()
+        assert.strictEqual(blogs.length, testHelper.initialBlogs.length)
+})
+
+test('blog with missing url is not added', async () => {
+        const blog = {
+            title: "Type wars 2",
+            author: "Robert C. Martin"
+        }
+
+         await api
+            .post('/api/blogs')
+            .send(blog)
+            .expect(400)
+
+        const blogs = await testHelper.blogsInDB()
+        assert.strictEqual(blogs.length, testHelper.initialBlogs.length)
+})
+
 after(() => {
     mongoose.connection.close()
 })
