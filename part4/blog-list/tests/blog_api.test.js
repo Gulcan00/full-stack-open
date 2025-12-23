@@ -116,7 +116,37 @@ describe('deletion of a blog', () => {
 
       assert.strictEqual(blogsAtEnd.length, testHelper.initialBlogs.length - 1)
     })
-  })
+})
+
+describe('update existing blog', () => {
+    test('succeeds with valid id', async () => {
+        const blogsAtStart = await testHelper.blogsInDB()
+        const blogToUpdate = blogsAtStart[0]
+
+        blogToUpdate.likes += 4
+
+        await api
+            .put(`/api/blogs/${blogToUpdate.id}`)
+            .send(blogToUpdate)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+
+        const blogsAtEnd = await testHelper.blogsInDB()
+        const updatedBlog = blogsAtEnd.find(blog => blog.id === blogToUpdate.id)
+        assert.deepStrictEqual(updatedBlog, blogToUpdate)
+    })
+
+    test('fails with statuscode 404 for invalid id', async () => {
+        const blogsAtStart = await testHelper.blogsInDB()
+        const blogToUpdate = blogsAtStart[0]
+        const id = await testHelper.nonExistingId()
+
+        await api
+            .put(`/api/blogs/${id}`)
+            .send(blogToUpdate)
+            .expect(404)
+    })
+})
 
 after(() => {
     mongoose.connection.close()
