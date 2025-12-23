@@ -1,4 +1,4 @@
-const { test, after, beforeEach } = require('node:test')
+const { test, after, beforeEach, describe } = require('node:test')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
@@ -101,6 +101,22 @@ test('blog with missing url is not added', async () => {
         const blogs = await testHelper.blogsInDB()
         assert.strictEqual(blogs.length, testHelper.initialBlogs.length)
 })
+
+describe('deletion of a blog', () => {
+    test('succeeds with status code 204 if id is valid', async () => {
+      const blogsAtStart = await testHelper.blogsInDB()
+      const blogToDelete = blogsAtStart[0]
+
+      await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+
+      const blogsAtEnd = await testHelper.blogsInDB()
+
+      const titles = blogsAtEnd.map(n => n.title)
+      assert(!titles.includes(blogToDelete.title))
+
+      assert.strictEqual(blogsAtEnd.length, testHelper.initialBlogs.length - 1)
+    })
+  })
 
 after(() => {
     mongoose.connection.close()
