@@ -38,7 +38,7 @@ test('a valid blog can be added', async () => {
         title: "Type wars 2",
         author: "Robert C. Martin",
         url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
-        likes: 0,
+        likes: 3,
     }
 
     await api
@@ -52,6 +52,24 @@ test('a valid blog can be added', async () => {
 
     const titles = blogs.map(blog => blog.title)
     assert(titles.includes('Type wars 2'))
+})
+
+test('likes defaults to 0 if missing', async () => {
+        const blog = {
+            title: "Type wars 2",
+            author: "Robert C. Martin",
+            url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html"
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(blog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        const blogs = await testHelper.blogsInDB()
+        const createdBlog = blogs.find(blog => blog.title === 'Type wars 2')
+        assert.strictEqual(createdBlog.likes, 0)
 })
 
 after(() => {
