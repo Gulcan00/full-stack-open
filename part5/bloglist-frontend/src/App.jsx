@@ -4,15 +4,14 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import Login from './components/Login'
 import Notification from './components/Notification'
+import Toggleable from './components/Toggleable'
+import BlogForm from './components/BlogForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const [notification, setNotification] = useState({message: null, type: null})
 
   useEffect(() => {
@@ -51,19 +50,10 @@ const App = () => {
     }
   }
 
-  const handleCreate = async (event) => {
-    event.preventDefault()
+  const handleCreate = async (blogObject) => {
     try {
-      const blogObject = {
-      title,
-      author,
-      url,
-      }
       const returnedBlog = await blogService.create(blogObject)
       setBlogs(blogs.concat(returnedBlog))
-      setTitle('')
-      setAuthor('')
-      setUrl('')
       setNotification({ message: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`, type: 'success' })
       setTimeout(() => {
         setNotification({message: null, type: null})
@@ -92,30 +82,15 @@ const App = () => {
     <div>
       <h2>blogs</h2>
       <Notification message={notification?.message} type={notification?.type} />
-      <p>{user.name} logged in</p><button onClick={() => {
+      {user.name} logged in<button onClick={() => {
         window.localStorage.removeItem('loggedBlogappUser')
         setUser(null)
       }}>logout</button>
-
-      <h2>create new</h2>
-      <form onSubmit={handleCreate}>
-        <label>
-          title:
-          <input type="text" value={title} name="Title" onChange={({ target }) => setTitle(target.value)} />
-        </label>
-        <br />
-        <label>
-          author:
-          <input type="text" value={author} name="Author" onChange={({ target }) => setAuthor(target.value)} />
-        </label>
-        <br />
-        <label>
-          url:
-          <input type="text" value={url} name="Url" onChange={({ target }) => setUrl(target.value)} />
-        </label>
-        <br />
-        <button type="submit">create</button>
-      </form>
+      <br />
+      <br />
+      <Toggleable buttonLabel="create new blog">
+        <BlogForm createBlog={handleCreate} />
+      </Toggleable>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
