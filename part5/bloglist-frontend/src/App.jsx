@@ -79,6 +79,18 @@ const App = () => {
     }
   }
 
+  const removeBlog = async (id) => {
+    try {
+      await blogService.deleteBlog(id)
+      setBlogs(blogs.filter(blog => blog.id !== id))
+    } catch {
+      setNotification({ message: 'error deleting blog', type: 'error' })  
+      setTimeout(() => {
+        setNotification({message: null, type: null})
+      }, 5000)
+    }
+  }
+
   if (user === null) {
     return (
       <><Login
@@ -105,7 +117,7 @@ const App = () => {
         <BlogForm createBlog={handleCreate} />
       </Toggleable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} updateBlog={handleUpdate} />
+        <Blog key={blog.id} blog={blog} updateBlog={handleUpdate} user={user} removeBlog={removeBlog} />
       )}
     </div>
   )
