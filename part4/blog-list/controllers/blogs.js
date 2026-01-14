@@ -39,9 +39,10 @@ blogRouter.delete('/:id', middleware.userExtractor, async (request, response) =>
   response.status(204).end()
 })
 
-blogRouter.put('/:id', async (request, response) => {
+blogRouter.put('/:id', middleware.userExtractor, async (request, response) => {
   const id = request.params.id
   let blogToUpdate = await Blog.findById(id)
+  const user = request.user
 
   if (!blogToUpdate) {
     return response.status(404).end()
@@ -52,6 +53,8 @@ blogRouter.put('/:id', async (request, response) => {
     blogToUpdate.likes = likes
     blogToUpdate.author = author
     blogToUpdate = await blogToUpdate.save()
+    user.blogs = user.blogs.concat(blogToUpdate._id)
+    await user.save()
     return response.json(blogToUpdate)
   }
 })

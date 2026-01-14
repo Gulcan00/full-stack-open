@@ -66,6 +66,18 @@ const App = () => {
     }
   }
 
+  const handleUpdate = async (id, updatedBlog) => {
+    try {
+      const returnedBlog = await blogService.update(id, updatedBlog)
+      setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
+    } catch {
+      setNotification({ message: 'error updating blog', type: 'error' })
+      setTimeout(() => {
+        setNotification({message: null, type: null})
+      }, 5000)
+    }
+  }
+
   if (user === null) {
     return (
       <><Login
@@ -92,7 +104,7 @@ const App = () => {
         <BlogForm createBlog={handleCreate} />
       </Toggleable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateBlog={handleUpdate} />
       )}
     </div>
   )
