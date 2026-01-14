@@ -12,13 +12,13 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [notification, setNotification] = useState({message: null, type: null})
+  const [notification, setNotification] = useState({ message: null, type: null })
 
   useEffect(() => {
     blogService.getAll().then(blogs => {
       blogs = blogs.sort((a, b) => b.likes - a.likes)
       setBlogs( blogs )
-    })  
+    })
   }, [])
 
   useEffect(() => {
@@ -46,7 +46,7 @@ const App = () => {
     } catch {
       setNotification({ message: 'wrong username or password', type: 'error' })
       setTimeout(() => {
-        setNotification({message: null, type: null})
+        setNotification({ message: null, type: null })
       }, 5000)
     }
   }
@@ -57,12 +57,12 @@ const App = () => {
       setBlogs(blogs.concat(returnedBlog))
       setNotification({ message: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`, type: 'success' })
       setTimeout(() => {
-        setNotification({message: null, type: null})
+        setNotification({ message: null, type: null })
       }, 5000)
     } catch {
       setNotification({ message: 'error creating blog', type: 'error' })
       setTimeout(() => {
-        setNotification({message: null, type: null})
+        setNotification({ message: null, type: null })
       }, 5000)
     }
   }
@@ -74,7 +74,7 @@ const App = () => {
     } catch {
       setNotification({ message: 'error updating blog', type: 'error' })
       setTimeout(() => {
-        setNotification({message: null, type: null})
+        setNotification({ message: null, type: null })
       }, 5000)
     }
   }
@@ -84,9 +84,9 @@ const App = () => {
       await blogService.deleteBlog(id)
       setBlogs(blogs.filter(blog => blog.id !== id))
     } catch {
-      setNotification({ message: 'error deleting blog', type: 'error' })  
+      setNotification({ message: 'error deleting blog', type: 'error' })
       setTimeout(() => {
-        setNotification({message: null, type: null})
+        setNotification({ message: null, type: null })
       }, 5000)
     }
   }
@@ -99,7 +99,7 @@ const App = () => {
         setUsername={setUsername}
         password={password}
         setPassword={setPassword} />
-        <Notification message={notification?.message} type={notification?.type} /></>
+      <Notification message={notification?.message} type={notification?.type} /></>
     )
   }
 

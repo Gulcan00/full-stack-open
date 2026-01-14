@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from 'react'
 
 const Blog = ({ blog, updateBlog, user, removeBlog }) => {
   const [detailsVisible, setDetailsVisible] = useState(false)
@@ -46,8 +46,8 @@ const Blog = ({ blog, updateBlog, user, removeBlog }) => {
             <button onClick={handleRemoveBlog}>remove</button>
           </div>
         }
-        </div>
-      }        
+      </div>
+      }
     </div>
-)}
+  )}
 export default Blog
