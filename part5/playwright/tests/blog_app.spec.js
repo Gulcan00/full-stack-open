@@ -75,5 +75,49 @@ describe('Blog app', () => {
         await expect(blog.getByRole('button', { name: 'remove'})).toBeVisible()
       })
     })
+
+    describe('multiple blogs exist', () => {
+      beforeEach(async ({ page, request }) => {
+        const loginResponse = await request.post('/api/login', {
+          data: {
+            username: 'mluukkai',
+            password: 'salainen'
+          }
+        })
+        const { token } = await loginResponse.json()
+
+        await request.post('/api/blogs', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          data: {
+            title: 'Test3',
+            author: 'John Smith',
+            url: 'localhost:123',
+            likes: 0
+          }
+        })
+        await request.post('/api/blogs', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          data: {
+            title: 'Test4',
+            author: 'John Smith',
+            url: 'localhost:123',
+            likes: 5
+          }
+        })
+
+        await page.reload()
+      })
+
+      test('blogs are ordered according to likes', async ({ page }) => {
+        const blogs = page.locator('.blog')
+        await expect(blogs.first()).toContainText('Test4 John Smith')
+        await expect(blogs.nth(1)).toContainText('Test3 John Smith')
+      })
+
+    })
   })
 })
