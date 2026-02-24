@@ -40,9 +40,7 @@ const anecdoteReducer = createSlice({
       )
     },
     createAnecdote(state, action) {
-      const content = action.payload
-      const newAnecdote = asObject(content)
-      state.push(newAnecdote)
+      state.push(action.payload)
     },
     setAnecdotes(state, action) {
       return action.payload
